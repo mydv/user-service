@@ -1,5 +1,6 @@
 package com.mohity.userservice;
 
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,20 +32,22 @@ public class UserServiceImpl implements UserService {
                 .role(DEFAULT_ROLE)
                 .build();
 
-        // save
         User savedUser = userRepository.save(user);
+        UserResponse userResponse = UserMapper.toUserResponse(savedUser);
 
-        // mapper
-        return UserResponse.builder()
-                .id(savedUser.getId())
-                .name(savedUser.getName())
-                .email(savedUser.getEmail())
-                .role(savedUser.getRole())
-                .build();
+        return userResponse;
     }
 
     @Override
     public Optional<UserResponse> getUserById(Long id) {
-        return Optional.empty();
+        Optional<User> userOptional = userRepository.findById(id);
+        if(userOptional.isEmpty()){
+            throw new ResourceNotFoundException("User not found with id: " + id);
+        }
+
+        User existingUser = userOptional.get();
+        UserResponse userResponse = UserMapper.toUserResponse(existingUser);
+
+        return Optional.of(userResponse);
     }
 }
