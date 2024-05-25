@@ -7,4 +7,8 @@ public interface UserService {
     UserResponse createUser(UserCreateRequest userCreateRequest);
 
     Optional<UserResponse> getUserById(Long id);
+
+    Optional<UserResponse> updateUser(Long id, UserUpdateRequest userUpdateRequest);
+
+    Optional<UserResponse> updateUserPassword(Long id, UpdatePasswordRequest updatePasswordRequest);
 }

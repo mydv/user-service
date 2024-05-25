@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse createUser(UserCreateRequest request) {
-        Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
+        Optional<User> existingUser = getUserByEmail(request.getEmail());
         if (existingUser.isPresent()) {
             throw new RuntimeException("User with this email already exists");
         }
@@ -47,6 +47,52 @@ public class UserServiceImpl implements UserService {
 
         User existingUser = userOptional.get();
         UserResponse userResponse = UserMapper.toUserResponse(existingUser);
+
+        return Optional.of(userResponse);
+    }
+
+    @Override
+    public Optional<UserResponse> updateUser(Long id, UserUpdateRequest request) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(userOptional.isEmpty()){
+            throw new ResourceNotFoundException("User not found with id: " + id);
+        }
+
+        User existingUser = userOptional.get();
+
+        if (request.getEmail() != null && !request.getEmail().equals(existingUser.getEmail())) {
+            Optional<User> existingUserByEmailOptional = getUserByEmail(request.getEmail());
+            if(existingUserByEmailOptional.isPresent()){
+                throw new RuntimeException("User with this email already exists");
+            }
+        }
+
+        existingUser.builder()
+                .name(Optional.ofNullable(request.getName()).orElse(existingUser.getName()))
+                .phone(Optional.ofNullable(request.getPhone()).orElse(existingUser.getPhone()))
+                .city(Optional.ofNullable(request.getCity()).orElse(existingUser.getCity()))
+                .linkedinProfile(Optional.ofNullable(request.getLinkedinProfile()).orElse(existingUser.getLinkedinProfile()))
+                .bio(Optional.ofNullable(request.getBio()).orElse(existingUser.getBio()));
+
+        User savedUser = userRepository.save(existingUser);
+        UserResponse userResponse = UserMapper.toUserResponse(savedUser);
+
+        return Optional.of(userResponse);
+    }
+
+    private Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<UserResponse> updateUserPassword(Long id, UpdatePasswordRequest request) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+
+        existingUser.setPassword(request.getNewPassword());
+
+        User savedUser = userRepository.save(existingUser);
+        UserResponse userResponse = UserMapper.toUserResponse(savedUser);
 
         return Optional.of(userResponse);
     }

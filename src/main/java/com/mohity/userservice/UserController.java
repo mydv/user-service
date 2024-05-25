@@ -25,4 +25,18 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
+        return userService.updateUser(id, userUpdateRequest)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}/password")
+    public ResponseEntity<UserResponse> updateUserPassword(@PathVariable Long id,
+                                                           @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        return userService.updateUserPassword(id, updatePasswordRequest)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
