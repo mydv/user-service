@@ -11,4 +11,6 @@ public interface UserService {
     Optional<UserResponse> updateUser(Long id, UserUpdateRequest userUpdateRequest);
 
     Optional<UserResponse> updateUserPassword(Long id, UpdatePasswordRequest updatePasswordRequest);
+
+    void deleteUser(Long id);
 }
