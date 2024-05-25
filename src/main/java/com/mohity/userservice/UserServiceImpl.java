@@ -4,6 +4,7 @@ import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.mohity.userservice.Role.USER;
@@ -104,5 +105,24 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<UserResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+
+        return users.stream().map(UserMapper::toUserResponse).toList();
+    }
+
+    @Override
+    public Optional<UserResponse> updateUserRole(Long id, UpdateUserRoleRequest request) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+
+        existingUser.setRole(request.getRole());
+        User savedUser = userRepository.save(existingUser);
+        UserResponse userResponse = UserMapper.toUserResponse(savedUser);
+
+        return Optional.of(userResponse);
     }
 }

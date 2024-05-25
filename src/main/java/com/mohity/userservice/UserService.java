@@ -1,5 +1,6 @@
 package com.mohity.userservice;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -13,4 +14,8 @@ public interface UserService {
     Optional<UserResponse> updateUserPassword(Long id, UpdatePasswordRequest updatePasswordRequest);
 
     void deleteUser(Long id);
+
+    List<UserResponse> getAllUsers();
+
+    Optional<UserResponse> updateUserRole(Long id, UpdateUserRoleRequest updateUserRoleRequest);
 }
