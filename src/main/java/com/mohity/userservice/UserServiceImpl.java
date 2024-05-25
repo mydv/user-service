@@ -4,6 +4,7 @@ import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
 
     private static final Role DEFAULT_ROLE = USER;
 
@@ -36,6 +40,13 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         UserResponse userResponse = UserMapper.toUserResponse(savedUser);
 
+        UserEvent userEvent = UserEvent.builder()
+                .eventType(EventType.CREATE_USER)
+                .timestamp(LocalDateTime.now())
+                .userId(userResponse.getId())
+                .build();
+        kafkaProducerService.publishUserEvent(userEvent);
+
         return userResponse;
     }
 
@@ -48,6 +59,13 @@ public class UserServiceImpl implements UserService {
 
         User existingUser = userOptional.get();
         UserResponse userResponse = UserMapper.toUserResponse(existingUser);
+
+        UserEvent userEvent = UserEvent.builder()
+                .eventType(EventType.READ_USER)
+                .timestamp(LocalDateTime.now())
+                .userId(userResponse.getId())
+                .build();
+        kafkaProducerService.publishUserEvent(userEvent);
 
         return Optional.of(userResponse);
     }
@@ -78,6 +96,13 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(existingUser);
         UserResponse userResponse = UserMapper.toUserResponse(savedUser);
 
+        UserEvent userEvent = UserEvent.builder()
+                .eventType(EventType.UPDATE_USER)
+                .timestamp(LocalDateTime.now())
+                .userId(userResponse.getId())
+                .build();
+        kafkaProducerService.publishUserEvent(userEvent);
+
         return Optional.of(userResponse);
     }
 
@@ -95,6 +120,13 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(existingUser);
         UserResponse userResponse = UserMapper.toUserResponse(savedUser);
 
+        UserEvent userEvent = UserEvent.builder()
+                .eventType(EventType.UPDATE_USER_PASSWORD)
+                .timestamp(LocalDateTime.now())
+                .userId(id)
+                .build();
+        kafkaProducerService.publishUserEvent(userEvent);
+
         return Optional.of(userResponse);
     }
 
@@ -105,11 +137,25 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.deleteById(id);
+
+        UserEvent userEvent = UserEvent.builder()
+                .eventType(EventType.DELETE_USER)
+                .timestamp(LocalDateTime.now())
+                .userId(id)
+                .build();
+        kafkaProducerService.publishUserEvent(userEvent);
     }
 
     @Override
     public List<UserResponse> getAllUsers() {
         List<User> users = userRepository.findAll();
+
+        UserEvent userEvent = UserEvent.builder()
+                .eventType(EventType.READ_ALL_USERS)
+                .timestamp(LocalDateTime.now())
+                .userId(null)
+                .build();
+        kafkaProducerService.publishUserEvent(userEvent);
 
         return users.stream().map(UserMapper::toUserResponse).toList();
     }
@@ -122,6 +168,13 @@ public class UserServiceImpl implements UserService {
         existingUser.setRole(request.getRole());
         User savedUser = userRepository.save(existingUser);
         UserResponse userResponse = UserMapper.toUserResponse(savedUser);
+
+        UserEvent userEvent = UserEvent.builder()
+                .eventType(EventType.UPDATE_USER_ROLE)
+                .timestamp(LocalDateTime.now())
+                .userId(id)
+                .build();
+        kafkaProducerService.publishUserEvent(userEvent);
 
         return Optional.of(userResponse);
     }
