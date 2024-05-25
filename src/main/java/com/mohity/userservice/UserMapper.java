@@ -8,6 +8,10 @@ public class UserMapper {
                 .name(user.getName())
                 .email(user.getEmail())
                 .role(user.getRole())
+                .phone(user.getPhone())
+                .city(user.getCity())
+                .linkedinProfile(user.getLinkedinProfile())
+                .bio(user.getBio())
                 .build();
     }
 }

@@ -29,4 +29,16 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column
+    private String phone;
+
+    @Column
+    private String city;
+
+    @Column
+    private String linkedinProfile;
+
+    @Column
+    private String bio;
 }
