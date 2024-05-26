@@ -1,15 +1,11 @@
-package com.mohity.userservice;
+package com.mohity.userservice.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class UserResponse {
-    private Long id;
+public class UserUpdateRequest {
     private String name;
     private String email;
-    private Role role;
     private String phone;
     private String city;
     private String linkedinProfile;

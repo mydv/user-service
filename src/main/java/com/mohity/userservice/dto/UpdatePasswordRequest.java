@@ -1,4 +1,4 @@
-package com.mohity.userservice;
+package com.mohity.userservice.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;

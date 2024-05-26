@@ -1,4 +1,4 @@
-package com.mohity.userservice;
+package com.mohity.userservice.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

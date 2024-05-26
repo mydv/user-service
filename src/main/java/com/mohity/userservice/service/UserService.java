@@ -1,4 +1,6 @@
-package com.mohity.userservice;
+package com.mohity.userservice.service;
+
+import com.mohity.userservice.dto.*;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,5 +1,7 @@
-package com.mohity.userservice;
+package com.mohity.userservice.controller;
 
+import com.mohity.userservice.service.UserService;
+import com.mohity.userservice.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

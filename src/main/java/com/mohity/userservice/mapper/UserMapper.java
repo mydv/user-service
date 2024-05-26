@@ -1,4 +1,7 @@
-package com.mohity.userservice;
+package com.mohity.userservice.mapper;
+
+import com.mohity.userservice.dto.UserResponse;
+import com.mohity.userservice.model.User;
 
 public class UserMapper {
 

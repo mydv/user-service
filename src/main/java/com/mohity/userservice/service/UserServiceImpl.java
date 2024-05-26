@@ -1,5 +1,10 @@
-package com.mohity.userservice;
+package com.mohity.userservice.service;
 
+import com.mohity.userservice.dto.*;
+import com.mohity.userservice.mapper.UserMapper;
+import com.mohity.userservice.model.Role;
+import com.mohity.userservice.model.User;
+import com.mohity.userservice.repository.UserRepository;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mohity.userservice.Role.USER;
+import static com.mohity.userservice.model.Role.USER;
 
 @Service
 public class UserServiceImpl implements UserService {

@@ -1,4 +1,4 @@
-package com.mohity.userservice;
+package com.mohity.userservice.dto;
 
 public enum EventType {
     CREATE_USER,

@@ -1,5 +1,6 @@
-package com.mohity.userservice;
+package com.mohity.userservice.repository;
 
+import com.mohity.userservice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
